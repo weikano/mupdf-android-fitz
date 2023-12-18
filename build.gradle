@@ -1,8 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-group = 'com.artifex.mupdf'
-version = '1.23.7'
+//group = 'com.artifex.mupdf'
+//version = '1.23.7'
+group = "com.szzy.ireader.ink.mupdf"
+version = "1.0.0"
 
 buildscript {
 	repositories {
