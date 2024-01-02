@@ -6,6 +6,26 @@ apply plugin: 'maven-publish'
 group = "com.szzy.ireader.ink.mupdf"
 version = "1.0.2"
 
+
+Properties p = new Properties()
+try(FileReader reader = new FileReader(new File("local.properties"))) {
+	p.load(reader);
+}
+def AUTH_USER = p.get("AUTH_USER")
+def AUTH_PWD = p.get("AUTH_PWD")
+def REPO_URL = p.get("REPO_URL")
+def TARGET = p.get("TARGET")
+def MAVEN_REPO_URL = "${REPO_URL}/${TARGET}"
+
+println("===============================")
+println(AUTH_USER)
+println(AUTH_PWD)
+println(REPO_URL)
+println(TARGET)
+println(MAVEN_REPO_URL)
+println("===============================")
+
+
 buildscript {
 	repositories {
 		if (project.hasProperty('MAVEN_REPO')) {
@@ -70,13 +90,13 @@ project.afterEvaluate {
 
 				pom {
 					name = 'fitz'
-					url = 'http://www.mupdf.com'
-					licenses {
-						license {
-							name = 'GNU Affero General Public License'
-							url = 'https://www.gnu.org/licenses/agpl-3.0.html'
-						}
-					}
+//					url = 'http://www.mupdf.com'
+//					licenses {
+//						license {
+//							name = 'GNU Affero General Public License'
+//							url = 'https://www.gnu.org/licenses/agpl-3.0.html'
+//						}
+//					}
 				}
 				pom.withXml {
 					final dependenciesNode = asNode().appendNode('dependencies')
@@ -91,12 +111,19 @@ project.afterEvaluate {
 		}
 		repositories {
 			maven {
-				name 'Local'
-				if (project.hasProperty('MAVEN_REPO')) {
-					url = MAVEN_REPO
-				} else {
-					url = "file://${System.properties['user.home']}/MAVEN"
+				allowInsecureProtocol = true
+				credentials {
+					username = "${AUTH_USER}"
+					password = "${AUTH_PWD}"
 				}
+				//url "$buildDir/repo"
+				url MAVEN_REPO_URL
+//				name 'Local'
+//				if (project.hasProperty('MAVEN_REPO')) {
+//					url = MAVEN_REPO
+//				} else {
+//					url = "file://${System.properties['user.home']}/MAVEN"
+//				}
 			}
 		}
 	}
